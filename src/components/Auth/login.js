@@ -1,17 +1,24 @@
 // src/components/Auth/Login.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; 
 import { loginUser } from '../../api/api';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate(); 
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
             const response = await loginUser({ username, password });
             console.log('Login successful', response.data);
-            // Store user info/token here if needed
+            
+            if (response.data.role === 'user') {
+                navigate('/dashboard'); 
+            } else if (response.data.role === 'admin') {
+                // navigate('/admin'); 
+            }
         } catch (error) {
             console.error('Login error', error);
         }
