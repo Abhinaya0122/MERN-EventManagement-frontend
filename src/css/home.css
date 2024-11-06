@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.home-container{
+    /* border: 1px solid rgb(0, 0, 0); */
+    height: 80vh;
+    margin: 0;
+    padding: 0;
+    background-image: url('D:/Event-System/frontend/public/22471.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.center-container{
+    margin-top: 20vh;
+    margin-left: 50vh;
+    margin-right: 50vh;
+    /* border: 1px solid red; */
+    display: flex;
+    padding: 5%;
+    background-image: url('../../public/rb_18900.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.left-container{
+    margin: 2%;
+    margin-right: 20%;
+    font-family: 'Poppins';
+}
+
+.right-container {
+   margin-right: 3%;
+}
+ .right-container img {
+    height: 250px;
+    width: 250px;
+ }
+
+
+@media screen and (max-width: 1050px){
+    
+}
+
+@media screen and (max-width: 800px){
+    
+}
+
+@media screen and (max-width: 450px){
+   
+}
+
