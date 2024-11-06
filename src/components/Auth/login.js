@@ -12,15 +12,21 @@ const Login = () => {
         e.preventDefault();
         try {
             const response = await loginUser({ username, password });
-            console.log('Login successful', response.data);
-            
+            console.log('Login successful', response.data.token);
+
+            // Save the token to localStorage
+            localStorage.setItem('token', response.data.token); // Assuming `token` is in response.data
+            console.log( response.data.token);
+
+            // Redirect based on user role
             if (response.data.role === 'user') {
                 navigate('/dashboard'); 
             } else if (response.data.role === 'admin') {
-                // navigate('/admin'); 
+                navigate('/admin'); 
             }
         } catch (error) {
             console.error('Login error', error);
+            alert('Login failed, please check your credentials.');
         }
     };
 

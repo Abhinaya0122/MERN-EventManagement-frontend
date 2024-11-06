@@ -8,6 +8,7 @@ import CreateEvent from './components/Event/CreateEvent';
 import EventList from './components/Event/EventList';
 
 import StudentDashboard from './components/StudentDashboard';
+import AdminDashboard from './components/AdminDashboard';
 
 const App = () => {
     return (
@@ -20,6 +21,7 @@ const App = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/create-event" element={<CreateEvent />} />
                     <Route path="/dashboard" element={<StudentDashboard />}/>
+                    <Route path='/admin' element={<AdminDashboard />}/>
                 </Routes>
             </div>
         </Router>

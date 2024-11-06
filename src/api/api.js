@@ -23,7 +23,18 @@ export const fetchEvents = async () => {
 
 
 export const registerUserForEvent = async (eventId) => {
-    return await API.post(`/events/${eventId}/register`); // This assumes you have this route set up
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No token found');
+
+    return await axios.post(
+        `http://localhost:4242/api/events/${eventId}/register`,  
+        {},
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
 };
 
 
@@ -32,12 +43,10 @@ const API_URL = 'http://localhost:4242/api'; // Update to your backend URL
 
 export const fetchMyRegistrations = async () => {
     const token = localStorage.getItem('token'); // Get the token from local storage
-    return await axios.get(`${API_URL}/registrations/myRegistrations`, {
+    return await axios.get(`http://localhost:4242/api/registrations/my-registrations`, {
         headers: {
             Authorization: `Bearer ${token}`, // Add the token in the Authorization header
         },
     });
 };
-
-// Other API functions can be defined below...
 

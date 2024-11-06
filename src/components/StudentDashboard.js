@@ -16,6 +16,7 @@ const StudentDashboard = () => {
 
         const loadMyRegistrations = async () => {
             const response = await fetchMyRegistrations();
+            console.log(response.data);
             setMyRegistrations(response.data);
         };
 
@@ -57,7 +58,7 @@ const StudentDashboard = () => {
             <ul>
                 {myRegistrations.map((registration) => (
                     <li key={registration._id}>
-                        {registration.eventTitle} - {registration.eventDate}
+                        {registration.title} - {registration.date}
                     </li>
                 ))}
             </ul>
