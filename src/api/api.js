@@ -39,13 +39,13 @@ export const registerUserForEvent = async (eventId) => {
 
 
 
-const API_URL = 'http://localhost:4242/api'; // Update to your backend URL
+const API_URL = 'http://localhost:4242/api'; 
 
 export const fetchMyRegistrations = async () => {
-    const token = localStorage.getItem('token'); // Get the token from local storage
+    const token = localStorage.getItem('token'); 
     return await axios.get(`http://localhost:4242/api/registrations/my-registrations`, {
         headers: {
-            Authorization: `Bearer ${token}`, // Add the token in the Authorization header
+            Authorization: `Bearer ${token}`, 
         },
     });
 };
