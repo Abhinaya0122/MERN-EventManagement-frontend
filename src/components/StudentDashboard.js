@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchEvents, fetchMyRegistrations, registerUserForEvent } from '../api/api';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate instead
+import '../css/studentdashboard.css';
 
 const StudentDashboard = () => {
     const [events, setEvents] = useState([]);
@@ -42,28 +43,28 @@ const StudentDashboard = () => {
     };
 
     return (
-        <div>
+        <div className="admin-dashboard">
             <h1>Student Dashboard</h1>
             <h2>Register for an Event</h2>
-            <ul>
+            <ul className="event-list">
                 {events.map((event) => (
-                    <li key={event._id}>
-                        {event.title} - {event.date}
+                    <li className="event-item" key={event._id}>
+                        <span className="event-title">{event.title} - {new Date(event.date).toLocaleDateString()}</span>
                         <button onClick={() => registerForEvent(event._id)}>Register</button>
                     </li>
                 ))}
             </ul>
-
+    
             <h2>My Registrations</h2>
-            <ul>
+            <ul className="registration-list">
                 {myRegistrations.map((registration) => (
-                    <li key={registration._id}>
-                        {registration.title} - {registration.date}
+                    <li className="registration-item" key={registration._id}>
+                        <span className="event-title">{registration.title} - {new Date(registration.date).toLocaleDateString()}</span>
                     </li>
                 ))}
             </ul>
-
-            <button onClick={handleLogout}>Logout</button>
+    
+            <button className="logout-button" onClick={handleLogout}>Logout</button>
         </div>
     );
 };

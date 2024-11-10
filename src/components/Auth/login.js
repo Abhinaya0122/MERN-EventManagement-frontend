@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import { loginUser } from '../../api/api';
+import '../../css/login.css';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -31,6 +32,7 @@ const Login = () => {
     };
 
     return (
+        <div className='login-container'>
         <form onSubmit={handleLogin}>
             <h2>Login</h2>
             <input
@@ -49,6 +51,7 @@ const Login = () => {
             />
             <button type="submit">Login</button>
         </form>
+        </div>
     );
 };
 

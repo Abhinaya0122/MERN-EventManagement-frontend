@@ -1,11 +1,13 @@
-// AdminDashboard.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import '../css/admin.css';
 
 const AdminDashboard = () => {
     const [events, setEvents] = useState([]);
-    const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '' });
+    const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', location: '' });
+    const [editingEvent, setEditingEvent] = useState(null); // State for the event being edited
 
+    // Fetch events from the backend
     useEffect(() => {
         const fetchEvents = async () => {
             try {
@@ -22,6 +24,7 @@ const AdminDashboard = () => {
         fetchEvents();
     }, []);
 
+    // Add new event
     const addEvent = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
@@ -46,6 +49,7 @@ const AdminDashboard = () => {
         }
     };
 
+    // Handle deleting an event
     const handleDeleteEvent = async (eventId) => {
         try {
             await axios.delete(`http://localhost:4242/api/events/${eventId}`, {
@@ -60,10 +64,50 @@ const AdminDashboard = () => {
         }
     };
 
+    // Handle editing an event
+    const handleEditEvent = (event) => {
+        setEditingEvent(event);
+        setNewEvent({
+            title: event.title,
+            description: event.description,
+            date: event.date,
+            location: event.location,
+        });
+    };
+
+    // Update event (for both create and update)
+    const updateEvent = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        if (!token) {
+            console.error("No token found, please log in.");
+            alert("No token found, please log in.");
+            return;
+        }
+
+        try {
+            const response = await axios.put(`http://localhost:4242/api/events/${editingEvent._id}`, newEvent, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log('Event updated successfully:', response.data);
+            // Update the event in the state
+            setEvents(events.map(event => event._id === editingEvent._id ? response.data : event));
+            setEditingEvent(null); // Reset editing state
+            setNewEvent({ title: '', description: '', date: '', location: '' }); // Reset form
+        } catch (error) {
+            console.error('Error updating event:', error.response?.data || error.message);
+            alert(error.response?.data?.message || 'Failed to update event');
+        }
+    };
+
     return (
-        <div>
+        <div className='admin-dashboard'>
             <h1>Admin Dashboard</h1>
-            <form onSubmit={addEvent}>
+
+            {/* Event Form for Adding or Editing */}
+            <form onSubmit={editingEvent ? updateEvent : addEvent}>
                 <input 
                     type="text" 
                     placeholder="Event Title" 
@@ -83,13 +127,17 @@ const AdminDashboard = () => {
                     onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} 
                     required 
                 />
-                <button type="submit">Add Event</button>
+              
+                <button type="submit">{editingEvent ? 'Update Event' : 'Add Event'}</button>
             </form>
+
+            {/* List of Existing Events */}
             <h2>Existing Events</h2>
             <ul>
                 {events.map(event => (
                     <li key={event._id}>
                         {event.title} - {new Date(event.date).toLocaleDateString()}
+                        <button onClick={() => handleEditEvent(event)}>Edit</button>
                         <button onClick={() => handleDeleteEvent(event._id)}>Delete</button>
                     </li>
                 ))}
