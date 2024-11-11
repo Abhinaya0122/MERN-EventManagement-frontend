@@ -4,7 +4,7 @@
     height: 100vh;
     margin: 0;
     padding: 0;
-    background-image: url('D:/Event-System/frontend/public/22471.jpg');
+    background-image: url('/public/22471.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     /* border: 1px solid red; */
