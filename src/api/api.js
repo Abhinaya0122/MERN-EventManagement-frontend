@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'http://localhost:4242/api', // Adjust the URL as necessary
+    baseURL: 'https://mern-eventmanagement-backend.onrender.com/api', // Adjust the URL as necessary
 });
 
 export const registerUser = async (userData) => {
@@ -27,7 +27,7 @@ export const registerUserForEvent = async (eventId) => {
     if (!token) throw new Error('No token found');
 
     return await axios.post(
-        `http://localhost:4242/api/events/${eventId}/register`,  
+        `https://mern-eventmanagement-backend.onrender.com/api/events/${eventId}/register`,  
         {},
         {
             headers: {
@@ -39,11 +39,11 @@ export const registerUserForEvent = async (eventId) => {
 
 
 
-const API_URL = 'http://localhost:4242/api'; 
+// const API_URL = 'https://mern-eventmanagement-backend.onrender.com/api'; 
 
 export const fetchMyRegistrations = async () => {
     const token = localStorage.getItem('token'); 
-    return await axios.get(`http://localhost:4242/api/registrations/my-registrations`, {
+    return await axios.get(`https://mern-eventmanagement-backend.onrender.com/api/registrations/my-registrations`, {
         headers: {
             Authorization: `Bearer ${token}`, 
         },

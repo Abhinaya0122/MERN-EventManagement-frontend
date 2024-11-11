@@ -11,7 +11,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchEvents = async () => {
             try {
-                const response = await axios.get('http://localhost:4242/api/events', {
+                const response = await axios.get('https://mern-eventmanagement-backend.onrender.com/api/events', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`, // Use token for authentication
                     },
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
         }
     
         try {
-            const response = await axios.post('http://localhost:4242/api/events', newEvent, {
+            const response = await axios.post('https://mern-eventmanagement-backend.onrender.com/api/events', newEvent, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -52,7 +52,7 @@ const AdminDashboard = () => {
     // Handle deleting an event
     const handleDeleteEvent = async (eventId) => {
         try {
-            await axios.delete(`http://localhost:4242/api/events/${eventId}`, {
+            await axios.delete(`https://mern-eventmanagement-backend.onrender.com/api/events/${eventId}`, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
@@ -86,7 +86,7 @@ const AdminDashboard = () => {
         }
 
         try {
-            const response = await axios.put(`http://localhost:4242/api/events/${editingEvent._id}`, newEvent, {
+            const response = await axios.put(`https://mern-eventmanagement-backend.onrender.com/api/events/${editingEvent._id}`, newEvent, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
