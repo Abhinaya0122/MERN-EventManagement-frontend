@@ -1,6 +1,6 @@
 // src/components/Dashboard/StudentDashboard.js
 import React, { useEffect, useState } from 'react';
-import { fetchEvents, fetchMyRegistrations, registerUserForEvent } from '../api/api';
+import { fetchEvents, fetchMyRegistrations, registerUserForEvent, cancelRegistrationForEvent } from '../api/api';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate instead
 import '../css/studentdashboard.css';
 
@@ -32,15 +32,38 @@ const StudentDashboard = () => {
 
     const registerForEvent = async (eventId) => {
         try {
-            await registerUserForEvent(eventId);
+            const responses = await registerUserForEvent(eventId);
+            console.log(responses);
             alert('Successfully registered for the event!');
-            const response = await fetchMyRegistrations(); // Refresh registrations
+            
+            // Refresh the list of registrations to reflect the new one
+            const response = await fetchMyRegistrations();
             setMyRegistrations(response.data);
         } catch (error) {
             console.error('Error registering for event', error);
-            alert('Registration failed!');
+    
+            // Check for specific error message (assuming error response includes a message field)
+            if (error.response && error.response.data.message === 'You are already registered for another event on this date.') {
+                alert('You are already registered for another event on this date.');
+            } else {
+                alert('Registration failed!');
+            }
         }
     };
+    const cancelRegistration = async (eventId) => {
+        try {
+            await cancelRegistrationForEvent(eventId);
+            alert('Successfully cancelled registration for the event');
+            
+            // Refresh the list of registrations after cancellation
+            const updatedRegistrations = await fetchMyRegistrations();
+            setMyRegistrations(updatedRegistrations.data);
+        } catch (error) {
+            console.error('Error cancelling registration', error);
+            alert('Error cancelling registration');
+        }
+    };
+    
 
     return (
         <div className="admin-dashboard">
@@ -60,6 +83,7 @@ const StudentDashboard = () => {
                 {myRegistrations.map((registration) => (
                     <li className="registration-item" key={registration._id}>
                         <span className="event-title">{registration.title} - {new Date(registration.date).toLocaleDateString()}</span>
+                        <button onClick={() => cancelRegistration(registration._id)}>Cancel Registration</button>
                     </li>
                 ))}
             </ul>

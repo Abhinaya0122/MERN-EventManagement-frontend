@@ -7,15 +7,16 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('user'); // Default role
+    const [RollNo, setRollNo] = useState('');
     const navigate = useNavigate();
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            const response = await registerUser({ username, password, role });
+            const response = await registerUser({ username, password, role,RollNo });
             console.log('Registration successful', response.data);
             if(role==='user'){
                 
-            navigate('/dashboard'); // Redirect to the dashboard on success
+            navigate('/'); // Redirect to the dashboard on success
             }
         } catch (error) {
             console.error('Registration error', error);
@@ -37,6 +38,13 @@ const Register = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
+            />
+            <input
+                type="text"
+                placeholder="RollNo"
+                value={RollNo}
+                onChange={(e) => setRollNo(e.target.value)}
                 required
             />
             <select value={role} onChange={(e) => setRole(e.target.value)}>

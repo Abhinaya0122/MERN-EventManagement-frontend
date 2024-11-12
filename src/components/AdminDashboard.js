@@ -5,7 +5,9 @@ import '../css/admin.css';
 const AdminDashboard = () => {
     const [events, setEvents] = useState([]);
     const [newEvent, setNewEvent] = useState({ title: '', description: '', date: '', location: '' });
-    const [editingEvent, setEditingEvent] = useState(null); // State for the event being edited
+    const [editingEvent, setEditingEvent] = useState(null);
+    const [viewParticipants, setViewParticipants] = useState([]); // State for participants
+    const [viewingEventId, setViewingEventId] = useState(null); // State for the ID of the event being viewed
 
     // Fetch events from the backend
     useEffect(() => {
@@ -13,7 +15,7 @@ const AdminDashboard = () => {
             try {
                 const response = await axios.get('https://mern-eventmanagement-backend.onrender.com/api/events', {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`, // Use token for authentication
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
                 setEvents(response.data);
@@ -40,9 +42,8 @@ const AdminDashboard = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log('Event added successfully:', response.data);
-            setEvents([...events, response.data]); // Update the events list
-            setNewEvent({ title: '', description: '', date: '', location: '' }); // Reset form
+            setEvents([...events, response.data]);
+            setNewEvent({ title: '', description: '', date: '', location: '' });
         } catch (error) {
             console.error('Error adding event:', error.response?.data || error.message);
             alert(error.response?.data?.message || 'Failed to add event');
@@ -57,7 +58,6 @@ const AdminDashboard = () => {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-            // Remove deleted event from state
             setEvents(events.filter(event => event._id !== eventId));
         } catch (error) {
             console.error('Error deleting event:', error.response?.data || error.message);
@@ -75,7 +75,23 @@ const AdminDashboard = () => {
         });
     };
 
-    // Update event (for both create and update)
+    // Handle viewing participants
+    const handleViewEvent = async (eventId) => {
+        try {
+            const response = await axios.get(`https://mern-eventmanagement-backend.onrender.com/api/events/${eventId}/getparticipants`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            setViewParticipants(response.data.participants);
+            console.log(response.data.participants)
+            setViewingEventId(eventId);
+        } catch (error) {
+            console.error('Error fetching participants:', error.response?.data || error.message);
+        }
+    };
+
+    // Update event
     const updateEvent = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token');
@@ -91,11 +107,9 @@ const AdminDashboard = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log('Event updated successfully:', response.data);
-            // Update the event in the state
             setEvents(events.map(event => event._id === editingEvent._id ? response.data : event));
-            setEditingEvent(null); // Reset editing state
-            setNewEvent({ title: '', description: '', date: '', location: '' }); // Reset form
+            setEditingEvent(null);
+            setNewEvent({ title: '', description: '', date: '', location: '' });
         } catch (error) {
             console.error('Error updating event:', error.response?.data || error.message);
             alert(error.response?.data?.message || 'Failed to update event');
@@ -127,7 +141,6 @@ const AdminDashboard = () => {
                     onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })} 
                     required 
                 />
-              
                 <button type="submit">{editingEvent ? 'Update Event' : 'Add Event'}</button>
             </form>
 
@@ -136,12 +149,29 @@ const AdminDashboard = () => {
             <ul>
                 {events.map(event => (
                     <li key={event._id}>
-                        {event.title} - {new Date(event.date).toLocaleDateString()}
+                        {event.title} - {new Date(event.date).toLocaleDateString()} - No of Participants: {event.participants.length}
                         <button onClick={() => handleEditEvent(event)}>Edit</button>
                         <button onClick={() => handleDeleteEvent(event._id)}>Delete</button>
+                        <button onClick={() => handleViewEvent(event._id)}>View Participants</button>
                     </li>
                 ))}
             </ul>
+
+            {/* Display Participants for the Selected Event */}
+            {viewingEventId && (
+                <div>
+                    <h3>Participants for Event ID: {viewingEventId}</h3>
+                    <ul>
+                        {viewParticipants.length > 0 ? (
+                            viewParticipants.map((participant, index) => (
+                                <li key={index}>{participant.username}-{participant.RollNo}</li>
+                            ))
+                        ) : (
+                            <p>No participants found for this event.</p>
+                        )}
+                    </ul>
+                </div>
+            )}
         </div>
     );
 };
